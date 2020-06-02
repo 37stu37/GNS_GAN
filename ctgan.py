@@ -1,13 +1,14 @@
-import os
-import numpy as np
-import pandas as pd
-from ctgan import *
+"""
+pip install ctgan
 
-data = pd.read_csv('multihazard.csv')
+"""
+
+import pandas as pd
+
+data = pd.read_csv('big_sampleV2.csv')
 data.columns
 
-data.drop(['Unnamed: 0'], axis=1, inplace=True)
-# data.reset_index(inplace = True)
+sample = data.sample(1000)
 
 discrete_columns = ['ID_unique', 'ID_unique_haz', 'event_magnitude', 'EQ2y', 'EQ5y',
        'EQ10y', 'EQ25y', 'EQ50y', 'EQ100y', 'EQ200y', 'EQ500y', 'EQ1000y',
@@ -19,4 +20,5 @@ discrete_columns = ['ID_unique', 'ID_unique_haz', 'event_magnitude', 'EQ2y', 'EQ
 from ctgan import CTGANSynthesizer
 
 ctgan = CTGANSynthesizer()
-ctgan.fit(data, discrete_columns, epochs=1)
+ctgan.fit(sample, discrete_columns, epochs=1)
+GANsamples = ctgan.sample(1000)
