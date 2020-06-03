@@ -4,7 +4,8 @@ pip3 install --upgrade pandas
 """
 
 import pandas as pd
-from ctgan import CTGANSynthesizer
+import ctgan
+# from ctgan import CTGANSynthesizer
 
 data = pd.read_csv('big_sampleV2.csv')
 data.columns
@@ -20,8 +21,8 @@ discrete_columns = ['ID_unique', 'ID_unique_haz']
        # 'AREA', 'SLP_mean', 'W_area', 'SLP_mean_haz', 'distance', 'angle']
 
 
-ctgan = CTGANSynthesizer()
-ctgan.fit(sample, discrete_columns, epochs=1)
+ctgan = ctgan.CTGANSynthesizer()
+ctgan.fit(sample, discrete_columns, epochs=5)
 GANsamples = ctgan.sample(1000)
 
 
