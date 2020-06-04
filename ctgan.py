@@ -2,31 +2,41 @@
 pip install ctgan
 pip3 install --upgrade pandas
 """
-
+import seaborn as sns
+import scipy.stats as stats
 import pandas as pd
 import ctgan
-# from ctgan import CTGANSynthesizer
+import time
+from scipy.stats import ks_2samp
 
-data = pd.read_csv('big_sampleV2.csv')
+data = pd.read_csv('FFEsample1perc.csv')
 data.columns
+data.drop(['Unnamed: 0', 'scenario', 'pid'], axis=1, inplace=True)
 
-sample = data.sample(20000)
+# sample = data.sample(frac=0.5)
 
-discrete_columns = ['ID_unique', 'ID_unique_haz']
-       # , 'event_magnitude', 'EQ2y', 'EQ5y',
-       # 'EQ10y', 'EQ25y', 'EQ50y', 'EQ100y', 'EQ200y', 'EQ500y', 'EQ1000y',
-       # 'EQ5000y', 'EQ10000y', 'fdem25fj', 'FL1700', 'FL2000', 'FL2300',
-       # 'FL2500', 'FL2900', 'SB_FL1700', 'SB_FL2000', 'SB_FL2300', 'SB_FL2500',
-       # 'SB_FL2900', 'LSeq', 'LSrf', 'RF10y', 'RF20y', 'RF50y', 'RF100y',
-       # 'AREA', 'SLP_mean', 'W_area', 'SLP_mean_haz', 'distance', 'angle']
+discrete_columns = ['source', 'target']
 
 
 ctgan = ctgan.CTGANSynthesizer()
-ctgan.fit(sample, discrete_columns, epochs=5)
-GANsamples = ctgan.sample(1000)
+fit_time = time.time()
+e=5
+ctgan.fit(data, discrete_columns, epochs=e)
+endFit_time = time.time()-fit_time
+print("{} epochs finished in {}".format(e, endFit_time))
+# GANsamples = ctgan.sample(1000)
 
 
 # ## options for scoring the model
 # y_hat, test_features = lgb_model.predict(X_test)
 # # check score
 # test_score = roc_auc_score(y_test, y_hat)
+
+#test
+# sns.pairplot(sample)
+sns.set(style='white')
+for (c, columnData) in sample.iteritems():
+# for c in sample.columns:
+    print(c)
+    sns.jointplot(sample[c].sample(1000), GANsamples[c], kind="kde") # .annotate(stats.pearsonr)
+    stats.ks_2samp(sample[c], GANsamples[c])
