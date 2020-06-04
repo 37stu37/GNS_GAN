@@ -7,20 +7,19 @@ import scipy.stats as stats
 import pandas as pd
 import ctgan
 import time
-from scipy.stats import ks_2samp
 
 data = pd.read_csv('FFEsample1perc.csv')
 data.columns
 data.drop(['Unnamed: 0', 'scenario', 'pid'], axis=1, inplace=True)
 
-# sample = data.sample(frac=0.5)
+sample = data.sample(frac=0.01)
 
 discrete_columns = ['source', 'target']
 
 
 ctgan = ctgan.CTGANSynthesizer()
 fit_time = time.time()
-e=5
+e=1
 ctgan.fit(data, discrete_columns, epochs=e)
 endFit_time = time.time()-fit_time
 print("{} epochs finished in {}".format(e, endFit_time))
