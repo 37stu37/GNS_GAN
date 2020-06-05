@@ -19,7 +19,7 @@ discrete_columns = ['source', 'target']
 
 ctgan = ctgan.CTGANSynthesizer()
 fit_time = time.time()
-e=1
+e=200
 ctgan.fit(sample, discrete_columns, epochs=e)
 endFit_time = time.time()-fit_time
 print("{} epochs finished in {}".format(e, endFit_time))
